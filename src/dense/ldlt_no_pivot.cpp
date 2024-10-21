@@ -6,6 +6,7 @@
 // LICENSE file in the root directory of this source tree.
 
 #include "piqp/dense/ldlt_no_pivot.hpp"
+#include "piqp/common.hpp"
 
 namespace piqp
 {
