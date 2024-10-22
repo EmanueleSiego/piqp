@@ -61,15 +61,15 @@ struct KKT : public KKTImpl<KKT<T, I, Mode, Ordering>, T, I, Mode>
     inline isize kkt_size()
     {
         isize n_kkt;
-        if (Mode == KKTMode::KKT_FULL)
+        if constexpr (Mode == KKTMode::KKT_FULL)
         {
             n_kkt = data.n + data.p + data.m;
         }
-        else if (Mode == KKTMode::KKT_EQ_ELIMINATED)
+        else if constexpr (Mode == KKTMode::KKT_EQ_ELIMINATED)
         {
             n_kkt = data.n + data.m;
         }
-        else if (Mode == KKTMode::KKT_INEQ_ELIMINATED)
+        else if constexpr (Mode == KKTMode::KKT_INEQ_ELIMINATED)
         {
             n_kkt = data.n + data.p;
         }
@@ -295,7 +295,7 @@ struct KKT : public KKTImpl<KKT<T, I, Mode, Ordering>, T, I, Mode>
         rhs_z_bar.array() = rhs_z.array() - m_z_inv.array() * rhs_s.array();
 
         rhs.head(data.n).noalias() = rhs_x;
-        if (Mode == KKTMode::KKT_FULL)
+        if constexpr (Mode == KKTMode::KKT_FULL)
         {
             rhs.segment(data.n, data.p).noalias() = rhs_y;
             rhs.tail(data.m).noalias() = rhs_z_bar;
@@ -380,20 +380,20 @@ struct KKT : public KKTImpl<KKT<T, I, Mode, Ordering>, T, I, Mode>
 
         delta_x.noalias() = rhs.head(data.n);
 
-        if (Mode == KKTMode::KKT_FULL)
+        if constexpr (Mode == KKTMode::KKT_FULL)
         {
             delta_y.noalias() = rhs.segment(data.n, data.p);
 
             delta_z.noalias() = rhs.tail(data.m);
         }
-        else if (Mode == KKTMode::KKT_EQ_ELIMINATED)
+        else if constexpr (Mode == KKTMode::KKT_EQ_ELIMINATED)
         {
             delta_y.noalias() = delta_inv * data.AT.transpose() * delta_x;
             delta_y.noalias() -= delta_inv * rhs_y;
 
             delta_z.noalias() = rhs.tail(data.m);
         }
-        else if (Mode == KKTMode::KKT_INEQ_ELIMINATED)
+        else if constexpr (Mode == KKTMode::KKT_INEQ_ELIMINATED)
         {
             delta_y.noalias() = rhs.tail(data.p);
 
